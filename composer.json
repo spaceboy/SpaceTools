@@ -1,5 +1,5 @@
 {
-    "name": "spaceboy/SpaceTools",
+    "name": "spaceboy/space-tools",
     "description": "Some functions for PHP/Nette",
     "require": {
         "php": ">= 5.3",
