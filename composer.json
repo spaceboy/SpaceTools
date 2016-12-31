@@ -1,7 +1,16 @@
 {
     "name": "spaceboy/space-tools",
     "description": "Some functions for PHP/Nette",
-    "require": {
+    "type": "library",
+    "version": "1.0.0",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Spaceboy"
+        }
+    ],
+    "keywords": ["spaceboy", "nette", "space-tools"],
+   "require": {
         "php": ">= 5.3",
         "nette/application": "^2.0.0"
     }
