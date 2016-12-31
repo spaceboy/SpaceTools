@@ -10,7 +10,7 @@
         }
     ],
     "keywords": ["spaceboy", "nette", "space-tools"],
-   "require": {
+    "require": {
         "php": ">= 5.3",
         "nette/application": "^2.0.0"
     }
