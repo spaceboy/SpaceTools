@@ -1,0 +1,8 @@
+{
+    "name": "spaceboy/SpaceTools",
+    "description": "Some functions for PHP/Nette",
+    "require": {
+        "php": ">= 5.3",
+        "nette/application": "^2.0.0",
+    }
+}
