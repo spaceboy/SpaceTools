@@ -5,10 +5,8 @@
 
 namespace Spaceboy;
 
-use Nette;
 
-
-class SpaceTools extends \Nette\Object {
+class SpaceTools extends \stdClass {
 
     /**
      * Přepočítává velikosti zadané ve stringu typu "10KB", "20MiB" atd. na bajty
@@ -123,6 +121,29 @@ class SpaceTools extends \Nette\Object {
             }
         }
         return $out;
+    }
+
+    /**
+     * Odstraní adresář včetně souborů v něm
+     * @param string $dir
+     * @return void
+     */
+    public static function purge ($dir) {
+        if (!is_dir($dir)) {
+            return;
+        }
+        foreach (scandir($dir) AS $file) {
+            if (in_array($file, ['.', '..'])) {
+                continue;
+            }
+            $fileName = $dir . DIRECTORY_SEPARATOR . $file;
+            if (is_dir($fileName)) {
+                self::purge($fileName);
+            } else {
+                unlink($fileName);
+            }
+        }
+        rmdir($dir);
     }
 
 }
