@@ -1,6 +1,6 @@
 {
     "name": "spaceboy/space-tools",
-    "description": "Some functions for PHP/Nette",
+    "description": "A few useful functions for PHP (\"A Swiss army knife for PHP developers\")",
     "type": "library",
     "license": "MIT",
     "authors": [
@@ -8,7 +8,10 @@
             "name": "Spaceboy"
         }
     ],
-    "keywords": ["spaceboy", "nette", "space-tools"],
+    "keywords": ["spaceboy", "php", "space-tools", "array", "file size", "directory", "path"],
+    "autoload": {
+        "classmap": ["src"]
+    },
     "require": {
         "php": ">= 5.3"
     }

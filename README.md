@@ -3,71 +3,72 @@
 Some functions for PHP/Nette
 
 
+## Function list:
 
-## getSizeInBytes
+### getSizeInBytes
 
-Přepočítává velikosti zadané ve stringu typu "10KB", "20MiB" atd. na bajty
-* @param string $sizeStr Zadaná velikost ve stringu typu "10KB", "20MiB"
-* @return integer Přepočtená velikost v bajtech
+Recomputes filesizes from "INI" type strings ("10KB", "20MiB" etc.) to bytes
+* @param string $sizeStr Given size in string like "10KB" or "20MiB"
+* @return integer Recalculated size in bytes
 
 
 
-## getIniSize
+### getIniSize
 
-Zjišťuje čísla z parametru v PHP.INI zadaná ve strigu typu "10KB", "20Mib" atd.
-* @param string $item Zadaná položka PHP.INI
-* @param integer $formatDecimals Počet des. čísel
-* @param string $formatDecPoint Oddělovač des. čísel
-* @param string $formatThousandsSeparator: Oddělovač tisíců
+Finds number from PHP.INI file ("10KB", "20MiB") and returns it in given format
+* @param string $item Given PHP.INI key
+* @param integer $formatDecimals Decimal numbers count
+* @param string $formatDecPoint Decimal separator
+* @param string $formatThousandsSeparator: Thousands separator
 * @return array
- - original => Původně zapsaný string
- - bytes    => Původně zapsaný string přepočtený na bajty
- - formated => Původně zapsaný string přepočtený na bajty v zadaném formátu
+  - original => Original string
+  - bytes    => Original string in bytes
+  - formated => Original string in bytes in given format
 
 
 
-## getMaxFileSize
+### getMaxFileSize
 
-Zjišťuje maximální velikost uploadovatelného souboru z PHP.INI
-* @param integer $formatDecimals Počet des. čísel
-* @param string $formatDecPoint Oddělovač des. čísel
-* @param string $formatThousandsSeparator: Oddělovač tisíců
+Finds maximum size of uploadable file (as given in PHP.INI)
+* @param integer $formatDecimals Decimal numbers count
+* @param string $formatDecPoint Decimal separator
+* @param string $formatThousandsSeparator: Thousands separator
 * @return array
-* - original => Původně zapsaný string
-* - bytes    => Původně zapsaný string přepočtený na bajty
-* - formated => Původně zapsaný string přepočtený na bajty v zadaném formátu
+  - original => Original string
+  - bytes    => Original string in bytes
+  - formated => Original string in bytes in given format
 
 
 
-## arrayRemap
+### arrayRemap
 
-Přeindexuje pole podle zadaných parametrů
-* @param array $source Zdrojové pole
-* @param array $map Popis "přemapování": pole ve tvaru array( původní_index => nový_index, původní_index2 => nový_index2 ... )
-* @param boolean $preserveUnset Pokud TRUE, vrací i prvky, které v původním poli nejsou definovány, ty mají hodnotu $default
-* @param $mixed $default Hodnota prvků, které nebyly v původním poli definovány
+Remaps array
+* @param array $source Source array
+* @param array $map "Map" for reindexing: array of items, where input index is key and output index value (original_index => new_index, original_index2 => new_index2 ... )
+* @param boolean $preserveUnset When TRUE, method returns indexes undefined in source array (with $default value)
+* @param $mixed $default Value for unset items
 * @return array
 
 
 
-## isPathAbsolute
+### isPathAbsolute
 
-Zjistí, zda je zadaná cesta (filesystem) absolutní
-* @param string filepath
+Checks whether path (of filesystem) is absolute (c:\something | /something)
+* @param string $path
 * @return boolean
-* @throws \Exception
+* @throws \Exception (when no path or path is NULL)
 
 
 
-## toArray
+### toArray
 
-Sjednotí vstupy do neindexovaného pole
-* @param array $args vstupní pole, může obsahovat skaláry a pole (i pole polí); ostatní se ignoruje
+Merges items of input array to unindexed array
+* @param array $args input array - can contain scalars and arrays (or arrays of arrays); other items (such objects, closures) are ignored
 * @return array
 
 
-## arrayIsAssoc
+### arrayIsAssoc
 
-Zjistí, zda je pole asociativní (s pojmenovanými indexy)
+Checks whether array is associative (with named indexes)
 * @param array $arr
 * @return boolean
