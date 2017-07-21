@@ -28,7 +28,7 @@ class SpaceTools extends \stdClass {
                 case 'mb':
                     return (int)$match[1] * 1048576;
                 case 'mib':
-                    return (int)$match[1] * 1048576;
+                    return (int)$match[1] * 1000000;
                 case 'g':
                 case 'gb':
                     return (int)$match[1] * 1073741824;
@@ -144,6 +144,18 @@ class SpaceTools extends \stdClass {
             }
         }
         rmdir($dir);
+    }
+
+    /**
+     * Zjistí, zda je pole asociativní
+     * @param array $arr
+     * @return boolean
+     */
+    public static function arrayIsAssoc ($arr) {
+        if (!($len = sizeof($arr))) {
+            return FALSE;
+        }
+        return (bool)sizeof(array_diff_key($arr, range(0, $len - 1)));
     }
 
 }
