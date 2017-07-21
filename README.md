@@ -64,3 +64,10 @@ Zjistí, zda je zadaná cesta (filesystem) absolutní
 Sjednotí vstupy do neindexovaného pole
 * @param array $args vstupní pole, může obsahovat skaláry a pole (i pole polí); ostatní se ignoruje
 * @return array
+
+
+## arrayIsAssoc
+
+Zjistí, zda je pole asociativní (s pojmenovanými indexy)
+* @param array $arr
+* @return boolean

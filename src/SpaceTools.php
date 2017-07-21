@@ -147,7 +147,7 @@ class SpaceTools extends \stdClass {
     }
 
     /**
-     * Zjistí, zda je pole asociativní
+     * Zjistí, zda je pole asociativní (s pojmenovanými indexy)
      * @param array $arr
      * @return boolean
      */
