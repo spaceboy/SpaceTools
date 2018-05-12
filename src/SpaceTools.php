@@ -1,5 +1,6 @@
 <?php
 /**
+ * Soubor statických metod -- nástrojů pro různé účely
  * @author Spaceboy
  */
 
@@ -49,14 +50,15 @@ class SpaceTools extends \stdClass {
      * - bytes    => Původně zapsaný string přepočtený na bajty
      * - formated => Původně zapsaný string přepočtený na bajty v zadaném formátu
      */
-    public static function getIniSize ($item, $formatDecimals = 0, $formatDecPoint = '.', $formatThousandsSeparator = ',') {
+    public static function getIniSize($item, $formatDecimals = 0, $formatDecPoint = '.', $formatThousandsSeparator = ',')
+    {
         $original = ini_get($item);
         $bytes = self::getSizeInBytes($original);
-        return array(
+        return [
             'original'  => $original,
             'bytes'     => $bytes,
             'formated'  => number_format($bytes, $formatDecimals, $formatDecPoint, $formatThousandsSeparator),
-        );
+        ];
     }
 
     /**
@@ -69,7 +71,8 @@ class SpaceTools extends \stdClass {
      * - bytes    => Původně zapsaný string přepočtený na bajty
      * - formated => Původně zapsaný string přepočtený na bajty v zadaném formátu
      */
-    public static function getMaxFileSize ($formatDecimals = 0, $formatDecPoint = '.', $formatThousandsSeparator = ',') {
+    public static function getMaxFileSize($formatDecimals = 0, $formatDecPoint = '.', $formatThousandsSeparator = ',')
+    {
         return self::getIniSize('upload_max_filesize', $formatDecimals, $formatDecPoint, $formatThousandsSeparator);
     }
 
@@ -81,8 +84,8 @@ class SpaceTools extends \stdClass {
      * @param $mixed $default Hodnota prvků, které nebyly v původním poli definovány
      * @return array
      */
-    public static function arrayRemap ($source, $map, $preserveUnset = false, $default = null) {
-        $out = array();
+    public static function arrayRemap($source, $map, $preserveUnset = FALSE, $default = NULL) {
+        $out = [];
         foreach ($map AS $key => $val) {
             if (array_key_exists($key, $source)) {
                 $out[$val] = $source[$key];
@@ -99,8 +102,9 @@ class SpaceTools extends \stdClass {
      * @return boolean
      * @throws \Exception
      */
-    public static function isPathAbsolute ($path) {
-        if ($path === null || $path === '') {
+    public static function isPathAbsolute($path)
+    {
+        if ($path === NULL || $path === '') {
             throw new \Exception('Empty path');
         }
         return $path[0] === DIRECTORY_SEPARATOR || preg_match('~\A[A-Z]:(?![^/\\\\])~i', $path) > 0;
@@ -111,8 +115,9 @@ class SpaceTools extends \stdClass {
      * @param array $args vstupní pole, může obsahovat skaláry a pole (i pole polí); ostatní se ignoruje
      * @return array
      */
-    public static function toArray ($args) {
-        $out = array();
+    public static function toArray($args)
+    {
+        $out = [];
         foreach ($args AS $item) {
             if (is_scalar($item)) {
                 $out[] = $item;
@@ -128,7 +133,8 @@ class SpaceTools extends \stdClass {
      * @param string $dir
      * @return void
      */
-    public static function purge ($dir) {
+    public static function purgeDir($dir)
+    {
         if (!is_dir($dir)) {
             return;
         }
@@ -151,11 +157,80 @@ class SpaceTools extends \stdClass {
      * @param array $arr
      * @return boolean
      */
-    public static function arrayIsAssoc ($arr) {
+    public static function arrayIsAssoc($arr)
+    {
         if (!($len = sizeof($arr))) {
             return FALSE;
         }
         return (bool)sizeof(array_diff_key($arr, range(0, $len - 1)));
+    }
+
+    /**
+    * Najde řádky, kde je v zadaném PHP souboru volána zadaná metoda
+    * @param string $phpFile
+    * @param string $methodName
+    * @return array (číslo řádku => část řádku, kde je prováděno volání
+    * @throws \InvalidArgumentException
+    */
+    public static function findMethodInPhp($phpFile, $methodName)
+    {
+       static::isFile($phpFile);
+       $scan   = FALSE;
+       $result = [];
+       $out    = '';
+       $line   = 0;
+       foreach (token_get_all(file_get_contents($phpFile)) AS $entity) {
+          if ($scan) {
+             $out    .= (is_array($entity) ? $entity[1] : $entity);
+          }
+          if (is_array($entity) && T_STRING == $entity[0] && $methodName === $entity[1]) {
+             $scan   = TRUE;
+             $out    = $entity[1];
+             $line   = $entity[2];
+          }
+          if ($scan && ';' === $entity) {
+             $scan   = FALSE;
+             if ($out) {
+                $result[$line]  = $out;
+             }
+          }
+       }
+       return $result;
+    }
+
+    /**
+    * Vrátí pole řádků ze souboru odpovídajícím zadanému parametru (1-based)
+    * @param string $fileName
+    * @param integer|array $line
+    * @return array
+    * @throws \InvalidArgumentException
+    */
+    public static function parseLineFromFile($fileName, $line)
+    {
+       static::isFile($fileName);
+       if (!is_array($line)) {
+          $line   = [$line];
+       }
+       array_walk($line, function (&$item) {
+          return --$item;
+       });
+       return array_intersect_key(explode(PHP_EOL, file_get_contents($fileName)), array_flip($line));
+    }
+
+    /**
+    * Zjistí, zda zadané jméno odpovídá souboru; pokud ne, vyhodí výjimku
+    * @param string $fileName
+    * @return void
+    * @throws \InvalidArgumentException
+    */
+    public static function isFile($fileName)
+    {
+       if (!file_exists($fileName)) {
+          throw new \InvalidArgumentException("File {$phpFile} not found.");
+       }
+       if (!is_file($fileName)) {
+          throw new \InvalidArgumentException("{$phpFile} is not file.");
+       }
     }
 
 }
