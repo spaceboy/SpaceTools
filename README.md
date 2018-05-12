@@ -39,7 +39,6 @@ Finds maximum size of uploadable file (as given in PHP.INI)
   - formated => Original string in bytes in given format
 
 
-
 ### arrayRemap
 
 Remaps array
@@ -72,3 +71,35 @@ Merges items of input array to unindexed array
 Checks whether array is associative (with named indexes)
 * @param array $arr
 * @return boolean
+
+
+### purgeDir
+
+Clears dir incl. files and subdirectories
+* @param string $dir
+* @return void
+
+
+### findMethodInPhp
+
+Finds use of given method in PHP file
+* @param string $phpFile
+* @param string $methodName
+* @return array (line number => part of line where method [$methodName] is used)
+* @throws \InvalidArgumentException
+
+
+### parseLineFromFile
+
+Returns array of line(s) with specified numbers from given file
+* @param string $fileName
+* @param integer|array $line
+* @return array
+* @throws \InvalidArgumentException
+
+
+### isFile
+If given file does not exists OR is not a file, throws InvalidArgumentException exception
+* @param string $fileName
+* @return void
+* @throws \InvalidArgumentException
