@@ -7,7 +7,7 @@
 namespace Spaceboy\SpaceTools;
 
 
-class Tools extends \stdClass {
+class SpaceTools extends \stdClass {
 
     /**
      * Přepočítává velikosti zadané ve stringu typu "10KB", "20MiB" atd. na bajty.
