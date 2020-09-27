@@ -4,13 +4,13 @@
  * @author Spaceboy
  */
 
-namespace Spaceboy;
+namespace Spaceboy\SpaceTools;
 
 
-class SpaceTools extends \stdClass {
+class Tools extends \stdClass {
 
     /**
-     * Přepočítává velikosti zadané ve stringu typu "10KB", "20MiB" atd. na bajty
+     * Přepočítává velikosti zadané ve stringu typu "10KB", "20MiB" atd. na bajty.
      * @param string $sizeStr Zadaná velikost ve stringu typu "10KB", "20MiB"
      * @return integer Přepočtená velikost v bajtech
      */
@@ -53,7 +53,7 @@ class SpaceTools extends \stdClass {
     public static function getIniSize($item, $formatDecimals = 0, $formatDecPoint = '.', $formatThousandsSeparator = ',')
     {
         $original = ini_get($item);
-        $bytes = self::getSizeInBytes($original);
+        $bytes = static::getSizeInBytes($original);
         return [
             'original'  => $original,
             'bytes'     => $bytes,
@@ -62,7 +62,7 @@ class SpaceTools extends \stdClass {
     }
 
     /**
-     * Zjišťuje maximální velikost uploadovatelného souboru z PHP.INI
+     * Zjišťuje maximální velikost uploadovatelného souboru z PHP.INI.
      * @param integer $formatDecimals Počet des. čísel
      * @param string $formatDecPoint Oddělovač des. čísel
      * @param string $formatThousandsSeparator: Oddělovač tisíců
@@ -73,11 +73,11 @@ class SpaceTools extends \stdClass {
      */
     public static function getMaxFileSize($formatDecimals = 0, $formatDecPoint = '.', $formatThousandsSeparator = ',')
     {
-        return self::getIniSize('upload_max_filesize', $formatDecimals, $formatDecPoint, $formatThousandsSeparator);
+        return static::getIniSize('upload_max_filesize', $formatDecimals, $formatDecPoint, $formatThousandsSeparator);
     }
 
     /**
-     * Přeindexuje pole podle zadaných parametrů
+     * Přeindexuje pole podle zadaných parametrů.
      * @param array $source Zdrojové pole
      * @param array $map Popis "přemapování": pole ve tvaru array( původní_index => nový_index, původní_index2 => nový_index2 ... )
      * @param boolean $preserveUnset Pokud TRUE, vrací i prvky, které v původním poli nejsou definovány, ty mají hodnotu $default
@@ -97,7 +97,7 @@ class SpaceTools extends \stdClass {
     }
 
     /**
-     * Zjistí, zda je zadaná cesta (filesystem) absolutní
+     * Zjistí, zda je zadaná cesta (filesystem) absolutní.
      * @param string filepath
      * @return boolean
      * @throws \Exception
@@ -122,14 +122,14 @@ class SpaceTools extends \stdClass {
             if (is_scalar($item)) {
                 $out[] = $item;
             } elseif (is_array($item)) {
-                $out = array_merge($out, self::toArray($item));
+                $out = array_merge($out, static::toArray($item));
             }
         }
         return $out;
     }
 
     /**
-     * Odstraní adresář včetně souborů v něm
+     * Odstraní adresář včetně souborů v něm.
      * @param string $dir
      * @return void
      */
@@ -144,7 +144,7 @@ class SpaceTools extends \stdClass {
             }
             $fileName = $dir . DIRECTORY_SEPARATOR . $file;
             if (is_dir($fileName)) {
-                self::purge($fileName);
+                static::purgeDir($fileName);
             } else {
                 unlink($fileName);
             }
@@ -153,7 +153,7 @@ class SpaceTools extends \stdClass {
     }
 
     /**
-     * Zjistí, zda je pole asociativní (s pojmenovanými indexy)
+     * Zjistí, zda je pole asociativní (s pojmenovanými indexy).
      * @param array $arr
      * @return boolean
      */
@@ -166,12 +166,12 @@ class SpaceTools extends \stdClass {
     }
 
     /**
-    * Najde řádky, kde je v zadaném PHP souboru volána zadaná metoda
-    * @param string $phpFile
-    * @param string $methodName
-    * @return array (číslo řádku => část řádku, kde je prováděno volání
-    * @throws \InvalidArgumentException
-    */
+     * Najde řádky, kde je v zadaném PHP souboru volána zadaná metoda.
+     * @param string $phpFile
+     * @param string $methodName
+     * @return array (číslo řádku => část řádku, kde je prováděno volání
+     * @throws \InvalidArgumentException
+     */
     public static function findMethodInPhp($phpFile, $methodName)
     {
        static::isFile($phpFile);
@@ -199,12 +199,12 @@ class SpaceTools extends \stdClass {
     }
 
     /**
-    * Vrátí pole řádků ze souboru odpovídajícím zadanému parametru (1-based)
-    * @param string $fileName
-    * @param integer|array $line
-    * @return array
-    * @throws \InvalidArgumentException
-    */
+     * Vrátí pole řádků ze souboru odpovídajícím zadanému parametru (1-based)
+     * @param string $fileName
+     * @param integer|array $line
+     * @return array
+     * @throws \InvalidArgumentException
+     */
     public static function parseLineFromFile($fileName, $line)
     {
        static::isFile($fileName);
@@ -218,19 +218,34 @@ class SpaceTools extends \stdClass {
     }
 
     /**
-    * Zjistí, zda zadané jméno odpovídá souboru; pokud ne, vyhodí výjimku
-    * @param string $fileName
-    * @return void
-    * @throws \InvalidArgumentException
-    */
+     * Zjistí, zda zadaný string ukazuje na soubor.
+     * @param string $fileName
+     * @return boolean
+     */
     public static function isFile($fileName)
     {
        if (!file_exists($fileName)) {
-          throw new \InvalidArgumentException("File {$phpFile} not found.");
+          return FALSE;
        }
        if (!is_file($fileName)) {
-          throw new \InvalidArgumentException("{$phpFile} is not file.");
+          return FALSE;
        }
+       return TRUE;
     }
 
+    /**
+     * Zjistí, zda zadaný string ukazuje na soubor, který můžeme číst.
+     * @param string $fileName
+     * @return boolean
+     */
+    public static function isReadableFile($fileName)
+    {
+       if (!static::isFile($fileName)) {
+          return FALSE;
+       }
+       if (!is_readable($fileName)) {
+          return FALSE;
+       }
+       return TRUE;
+    }
 }
